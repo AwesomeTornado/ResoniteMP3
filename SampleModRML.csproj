@@ -32,4 +32,7 @@
     <Compile Include="Mod.RML/**/*.cs" />
     <Compile Include="Patches.Harmony/**/*.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
 </Project>

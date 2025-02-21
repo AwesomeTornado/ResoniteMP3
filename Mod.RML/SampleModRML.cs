@@ -2,9 +2,11 @@
 using Elements.Core;
 using FrooxEngine;
 using HarmonyLib;
+using NAudio.Wave;
 using ResoniteModLoader;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using static FrooxEngine.CubemapCreator;
 
@@ -41,12 +43,6 @@ namespace resoniteMP3
             //harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad_2", new Type[] { typeof(string), typeof(World), typeof(float3), typeof(floatQ), typeof(bool), typeof(bool) }));
             harmony.PatchAll(); // do whatever LibHarmony patching you need, this will patch all [HarmonyPatch()] instances
 
-            //Various log methods provided by the mod loader, below is an example of how they will look
-            //3:14:42 AM.069 ( -1 FPS)  [INFO] [ResoniteModLoader/SampleMod] a regular log
-            Debug("a debug log");
-            Msg("a regular log");
-            Warn("a warn log");
-            Error("an error log");
         }
 
         public class PatchMethods
@@ -90,11 +86,16 @@ namespace resoniteMP3
 
             public static void Mp3ToWav(string mp3File, string outputFile)
             {
+                Msg("input file was " + mp3File);
+                Msg("output file is " + mp3File);
                 using (Mp3FileReader reader = new Mp3FileReader(mp3File))
                 {
+                    Msg("Reader initialized");
                     using (WaveStream pcmStream = WaveFormatConversionStream.CreatePcmStream(reader))
                     {
+                        Msg("Writer initialized");
                         WaveFileWriter.CreateWaveFile(outputFile, pcmStream);
+                        Msg("File should have been written.");
                     }
                 }
             }
@@ -107,15 +108,22 @@ namespace resoniteMP3
                     return true;
                 }
                 
+                List<string> files2 = new List<string>();
+
                 foreach (string file in files)
                 {
                     if (Path.GetExtension(file) == ".mp3")
                     {
                         Warn("Mp3 attempted load. Load was intercepted.");
 
-
+                        Mp3ToWav(file, file + ".wav");
+                        files2.Add(file + ".wav");
+                        Msg("Adding " + file + ".wav to the list of files to load.");
                     }
                 }
+                Msg("Old file list was: " + files.Join<string>());
+                files = files2;
+                Msg("\n\nNew file list is: " + files.Join<string>());
 
                 return true;
             }
