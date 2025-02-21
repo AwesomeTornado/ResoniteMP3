@@ -2,13 +2,18 @@
 using Elements.Core;
 using FrooxEngine;
 using HarmonyLib;
+using MPOHeaderReader;
+using NAudio.FileFormats.Mp3;
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
+using NAudio;
 using ResoniteModLoader;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static FrooxEngine.CubemapCreator;
+using static FrooxEngine.Projection360Material;
 
 namespace resoniteMP3
 {
@@ -86,18 +91,17 @@ namespace resoniteMP3
 
             public static void Mp3ToWav(string mp3File, string outputFile)
             {
+                Msg("file running?");
                 Msg("input file was " + mp3File);
                 Msg("output file is " + mp3File);
-                using (Mp3FileReader reader = new Mp3FileReader(mp3File))
+
+                using (var reader = new Mp3FileReader(mp3File))
                 {
-                    Msg("Reader initialized");
-                    using (WaveStream pcmStream = WaveFormatConversionStream.CreatePcmStream(reader))
-                    {
-                        Msg("Writer initialized");
-                        WaveFileWriter.CreateWaveFile(outputFile, pcmStream);
-                        Msg("File should have been written.");
-                    }
+                    Msg("reader created?");
+                    WaveFileWriter.CreateWaveFile(outputFile, reader);
+                    Msg("wave file created?");
                 }
+                Msg("Done????");
             }
 
 
@@ -115,10 +119,14 @@ namespace resoniteMP3
                     if (Path.GetExtension(file) == ".mp3")
                     {
                         Warn("Mp3 attempted load. Load was intercepted.");
-
-                        Mp3ToWav(file, file + ".wav");
+                        using (var reader = new Mp3FileReaderBase(file, wf => new DmoMp3FrameDecompressor(wf)))
+                        {
+                            WaveFileWriter.CreateWaveFile(file + ".wav", reader);
+                        }
+                        //Mp3ToWav(file, file + ".wav");
+                        Msg("Mp3 file converted to wav?");
                         files2.Add(file + ".wav");
-                        Msg("Adding " + file + ".wav to the list of files to load.");
+                        //Msg("Adding " + file + ".wav to the list of files to load.");
                     }
                 }
                 Msg("Old file list was: " + files.Join<string>());
