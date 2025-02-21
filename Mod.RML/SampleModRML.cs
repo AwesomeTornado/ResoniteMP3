@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using static FrooxEngine.CubemapCreator;
 using static FrooxEngine.Projection360Material;
 
-namespace resoniteMP3
+namespace resoniteMPThree
 {
     /// <summary>
     /// This mod is an implementation based on the example given in https://github.com/resonite-modding-group/ResoniteModLoader/blob/main/doc/making_mods.md.
@@ -41,13 +41,14 @@ namespace resoniteMP3
             Config = GetConfiguration(); //Get this mods' current ModConfiguration
             Config.Save(true); //If you'd like to save the default config values to file
 
-            Harmony harmony = new Harmony("com.github.AwesomeTornado.ResoniteMP3"); //typically a reverse domain name is used here (https://en.wikipedia.org/wiki/Reverse_domain_name_notation)
-            //public static AssetClass ClassifyExtension(string ext)
+            Harmony harmony = new Harmony("com.github.AwesomeTornado.ResoniteMP3");
+
             harmony.Patch(AccessTools.Method(typeof(AssetHelper), "ClassifyExtension"), postfix: AccessTools.Method(typeof(PatchMethods), "FixExtensionMapping"));
             harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
-            //harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad_2", new Type[] { typeof(string), typeof(World), typeof(float3), typeof(floatQ), typeof(bool), typeof(bool) }));
-            harmony.PatchAll(); // do whatever LibHarmony patching you need, this will patch all [HarmonyPatch()] instances
+            harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "DeleteTempFiles"));
+            harmony.PatchAll();
 
+            Msg("ResoniteMP3 loaded.");
         }
 
         public class PatchMethods
@@ -66,51 +67,65 @@ namespace resoniteMP3
                 }
             }
 
-            public static void Mp3ToWav(string mp3File, string outputFile)
+            public static string Mp3ToWav(string mp3File, string outputFile)
             {
-                Msg("file running?");
-                Msg("input file was " + mp3File);
-                Msg("output file is " + mp3File);
+                int retries = 20;
+                while (retries > 0 && File.Exists(outputFile))
+                {
+                    Warn("Output file already exists, trying another name.");
+                    outputFile = (10 - retries) + outputFile;
+                    retries--;
+                }
+
+                if (File.Exists(outputFile))
+                {
+                    Error("Failed to create output file.");
+                    return outputFile;
+                }
 
                 using (var reader = new Mp3FileReader(mp3File))
                 {
-                    Msg("reader created?");
                     WaveFileWriter.CreateWaveFile(outputFile, reader);
-                    Msg("wave file created?");
                 }
-                Msg("Done????");
+
+                return outputFile;
             }
 
-
-            private static bool ConvertMP3BeforeLoad(AssetClass assetClass, ref IEnumerable<string> files, World world, float3 position, floatQ rotation, float3 scale, bool silent = false)
+            private static bool ConvertMP3BeforeLoad(out List<string> __state, AssetClass assetClass, ref IEnumerable<string> files, World world, float3 position, floatQ rotation, float3 scale, bool silent = false)
             {
+                __state = new List<string>();
+
                 if (assetClass != AssetClass.Audio)
                 {
                     return true;
                 }
                 
                 List<string> files2 = new List<string>();
-
+                
                 foreach (string file in files)
                 {
                     if (Path.GetExtension(file) == ".mp3")
                     {
-                        Warn("Mp3 attempted load. Load was intercepted.");
-                        using (var reader = new Mp3FileReaderBase(file, wf => new DmoMp3FrameDecompressor(wf)))
-                        {
-                            WaveFileWriter.CreateWaveFile(file + ".wav", reader);
-                        }
-                        //Mp3ToWav(file, file + ".wav");
-                        Msg("Mp3 file converted to wav?");
-                        files2.Add(file + ".wav");
-                        //Msg("Adding " + file + ".wav to the list of files to load.");
+                        string newPath = Mp3ToWav(file, file + ".wav");
+                        Msg("Creating temp file: " + newPath);
+                        files2.Add(newPath);
+                        __state.Add(newPath);
                     }
                 }
-                Msg("Old file list was: " + files.Join<string>());
                 files = files2;
-                Msg("\n\nNew file list is: " + files.Join<string>());
-
                 return true;
+            }
+
+            private static void DeleteTempFiles(List<string> __state)
+            {
+                foreach (string file in __state)
+                {
+                    if (File.Exists(file))
+                    {
+                        Msg("Deleting temp file: " + file);
+                        File.Delete(file);
+                    }
+                }
             }
         }
     }
