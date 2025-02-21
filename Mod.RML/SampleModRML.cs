@@ -6,6 +6,7 @@ using ResoniteModLoader;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using static FrooxEngine.CubemapCreator;
 
 namespace resoniteMP3
 {
@@ -36,7 +37,8 @@ namespace resoniteMP3
             Harmony harmony = new Harmony("com.github.AwesomeTornado.ResoniteMP3"); //typically a reverse domain name is used here (https://en.wikipedia.org/wiki/Reverse_domain_name_notation)
             //public static AssetClass ClassifyExtension(string ext)
             harmony.Patch(AccessTools.Method(typeof(AssetHelper), "ClassifyExtension"), postfix: AccessTools.Method(typeof(PatchMethods), "FixExtensionMapping"));
-            harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), postfix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
+            harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
+            //harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad_2", new Type[] { typeof(string), typeof(World), typeof(float3), typeof(floatQ), typeof(bool), typeof(bool) }));
             harmony.PatchAll(); // do whatever LibHarmony patching you need, this will patch all [HarmonyPatch()] instances
 
             //Various log methods provided by the mod loader, below is an example of how they will look
@@ -62,8 +64,29 @@ namespace resoniteMP3
                     __result = AssetClass.Audio;
                 }
             }
+/*
+            public static void ConvertMP3BeforeLoad_1(AssetClass assetClass, IEnumerable<string> files, World world, float3 position, floatQ rotation, bool silent = false)
+            {
+                IEnumerable<string> files2 = files;
+                World world2 = world;
+                world2.Coroutines.StartTask(async delegate
+                {
+                    await ImportTask(assetClass, files2, world2, position, rotation, world2.LocalUserGlobalScale, silent);
+                });
+            }
 
-            private static bool ConvertMP3BeforeLoad(AssetClass assetClass, IEnumerable<string> files, World world, float3 position, floatQ rotation, float3 scale, bool silent = false)
+            public static Task ConvertMP3BeforeLoad_2(string path, World world, float3 position, floatQ rotation, bool silent = false, bool rawFile = false)
+            {
+                string path2 = path;
+                World world2 = world;
+                AssetClass assetClass = ((!rawFile) ? AssetHelper.IdentifyClass(path2) : AssetClass.Unknown);
+                return world2.Coroutines.StartTask(async delegate
+                {
+                    await ImportTask(assetClass, new string[1] { path2 }, world2, position, rotation, world2.LocalUserGlobalScale, silent);
+                });
+            }
+*/
+            private static bool ConvertMP3BeforeLoad(AssetClass assetClass, ref IEnumerable<string> files, World world, float3 position, floatQ rotation, float3 scale, bool silent = false)
             {
                 if (assetClass != AssetClass.Audio)
                 {
