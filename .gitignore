@@ -1,0 +1,14 @@
+﻿/.vs
+/obj
+/bin
+*.user
+/packages
+/Test/obj
+/Test/bin
+/*.nupkg
+/MonkeyLoader Mods/*
+/MonkeyLoader GamePacks/*
+/TestMonkey/obj
+/TestMonkey/bin
+/TestRML/obj
+/TestRML/bin

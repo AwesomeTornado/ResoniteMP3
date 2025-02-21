@@ -1,0 +1,32 @@
+﻿<Project>
+  <PropertyGroup>
+    <BaseOutputPath>bin\RML</BaseOutputPath>
+    <BaseIntermediateOutputPath>obj\RML</BaseIntermediateOutputPath>
+    <StartAction>Program</StartAction>
+    <StartArguments>-Screen -LoadAssembly Libraries/ResoniteModLoader.dll</StartArguments>
+    <VariantSuffix>ResoniteModLoader</VariantSuffix>
+  </PropertyGroup>
+  <Import Project="./SampleMod.csproj" />
+  <PropertyGroup>
+    <PostBuildEvent Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+      copy /Y "$(AssemblyName).dll" "$(ResonitePath)\rml_mods\$(AssemblyName).dll"
+	</PostBuildEvent>
+    <PostBuildEvent Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+      cp -f "$(AssemblyName).dll" "$(ResonitePath)/rml_mods/$(AssemblyName).dll"
+	</PostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Harmony">
+      <HintPath>$(ResonitePath)\rml_libs\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="ResoniteModLoader">
+      <HintPath>$(ResonitePath)\Libraries\ResoniteModLoader.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mod.RML"/>
+    <Folder Include="Patches.Harmony"/>
+    <Compile Include="Mod.RML/**/*.cs"/>
+    <Compile Include="Patches.Harmony/**/*.cs"/>
+  </ItemGroup>
+</Project>
