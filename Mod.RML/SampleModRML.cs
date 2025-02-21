@@ -65,29 +65,6 @@ namespace resoniteMP3
                     __result = AssetClass.Audio;
                 }
             }
-            /*
-                        public static void ConvertMP3BeforeLoad_1(AssetClass assetClass, IEnumerable<string> files, World world, float3 position, floatQ rotation, bool silent = false)
-                        {
-                            IEnumerable<string> files2 = files;
-                            World world2 = world;
-                            world2.Coroutines.StartTask(async delegate
-                            {
-                                await ImportTask(assetClass, files2, world2, position, rotation, world2.LocalUserGlobalScale, silent);
-                            });
-                        }
-
-                        public static Task ConvertMP3BeforeLoad_2(string path, World world, float3 position, floatQ rotation, bool silent = false, bool rawFile = false)
-                        {
-                            string path2 = path;
-                            World world2 = world;
-                            AssetClass assetClass = ((!rawFile) ? AssetHelper.IdentifyClass(path2) : AssetClass.Unknown);
-                            return world2.Coroutines.StartTask(async delegate
-                            {
-                                await ImportTask(assetClass, new string[1] { path2 }, world2, position, rotation, world2.LocalUserGlobalScale, silent);
-                            });
-                        }
-
-            */
 
             public static void Mp3ToWav(string mp3File, string outputFile)
             {
