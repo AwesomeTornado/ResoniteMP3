@@ -14,6 +14,10 @@
     <PostBuildEvent Condition="$([MSBuild]::IsOSPlatform('Linux'))">
       cp -f "$(AssemblyName).dll" "$(ResonitePath)/rml_mods/$(AssemblyName).dll"
 	</PostBuildEvent>
+    <AssemblyName>ResoniteMPThree</AssemblyName>
+    <Authors>__Choco__</Authors>
+    <Product />
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Harmony">
@@ -24,9 +28,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Mod.RML"/>
-    <Folder Include="Patches.Harmony"/>
-    <Compile Include="Mod.RML/**/*.cs"/>
-    <Compile Include="Patches.Harmony/**/*.cs"/>
+    <Folder Include="Mod.RML" />
+    <Compile Include="Mod.RML/**/*.cs" />
+    <Compile Include="Patches.Harmony/**/*.cs" />
   </ItemGroup>
 </Project>
