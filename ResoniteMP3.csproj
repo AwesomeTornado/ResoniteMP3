@@ -28,7 +28,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Mod.RML" />
     <Compile Include="Mod.RML/**/*.cs" />
     <Compile Include="Patches.Harmony/**/*.cs" />
     <Folder Include="Properties\" />
