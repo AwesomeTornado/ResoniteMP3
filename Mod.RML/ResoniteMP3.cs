@@ -21,7 +21,7 @@ namespace resoniteMPThree
     {
         public override string Name => "ResoniteMP3";
         public override string Author => "__Choco__";
-        public override string Version => "3.0.0"; //Version of the mod, should match the AssemblyVersion
+        public override string Version => "1.0.0"; //Version of the mod, should match the AssemblyVersion
         public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
 

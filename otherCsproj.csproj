@@ -3,7 +3,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <VariantSuffix Condition="'$(VariantSuffix)' == ''">Common</VariantSuffix>
-    <AssemblyName>__Choco__.ResoniteMP3.$(VariantSuffix)</AssemblyName>
+    <AssemblyName>__Choco__.ResoniteMP3</AssemblyName>
     <Authors>__Choco__</Authors>
     <TargetFramework>net472</TargetFramework>
     <AssemblyTitle>ResoniteMP3</AssemblyTitle>
