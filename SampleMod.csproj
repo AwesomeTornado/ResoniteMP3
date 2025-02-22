@@ -3,13 +3,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <VariantSuffix Condition="'$(VariantSuffix)' == ''">Common</VariantSuffix>
-    <AssemblyName>mpmxyz.SampleMod.$(VariantSuffix)</AssemblyName>
-    <Authors>mpmxyz</Authors>
+    <AssemblyName>__Choco__.ResoniteMP3.$(VariantSuffix)</AssemblyName>
+    <Authors>__Choco__</Authors>
     <TargetFramework>net472</TargetFramework>
-    <AssemblyTitle>SampleMod</AssemblyTitle>
-    <Product>SampleMod</Product>
+    <AssemblyTitle>ResoniteMP3</AssemblyTitle>
+    <Product>ResoniteMP3</Product>
     <Description>A sample Resonite Mod</Description>
-    <Copyright>CC0</Copyright>
+    <Copyright>MIT</Copyright>
     <Version>3.0.0</Version>
     <PackageProjectUrl>$(PROJECT_URL)</PackageProjectUrl>
     <PackageReleaseNotes>$(RELEASE_NOTES)</PackageReleaseNotes>
@@ -34,14 +34,6 @@
     <Error Condition="'$(ResonitePath)' == ''" Text="Missing environment variable 'ResonitePath'!" />
     <Warning Condition="'$(ResoniteCache)' == '' And '$(CI)' == ''" Text="Missing environment variable 'ResoniteCache': Default location may cause long Windows boot times." />
     <Error Condition="!Exists('$(ResonitePath)')" Text="Invalid Resonite path '$(ResonitePath)'!" />
-  </Target>
-  <Target Name="EnsureMonkeyModsDirectory" BeforeTargets="Restore;CollectPackageReferences" Condition="!Exists('$(MSBuildProjectDirectory)\MonkeyLoader Mods')">
-    <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="mkdir &quot;$(MSBuildProjectDirectory)\MonkeyLoader Mods&quot;" />
-    <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="mkdir -p &quot;$(MSBuildProjectDirectory)/MonkeyLoader Mods&quot;" />
-  </Target>
-  <Target Name="EnsureMonkeyGamePacksDirectory" BeforeTargets="Restore;CollectPackageReferences" Condition="!Exists('$(MSBuildProjectDirectory)\MonkeyLoader GamePacks')">
-    <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="mkdir &quot;$(MSBuildProjectDirectory)\MonkeyLoader GamePacks&quot;" />
-    <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="mkdir -p &quot;$(MSBuildProjectDirectory)/MonkeyLoader GamePacks&quot;" />
   </Target>
   <PropertyGroup>
     <DefaultItemExcludes>$(DefaultItemExcludes);obj/**</DefaultItemExcludes>

@@ -17,15 +17,12 @@ using static FrooxEngine.Projection360Material;
 
 namespace resoniteMPThree
 {
-    /// <summary>
-    /// This mod is an implementation based on the example given in https://github.com/resonite-modding-group/ResoniteModLoader/blob/main/doc/making_mods.md.
-    /// </summary>
     public class ResoniteMP3 : ResoniteMod
     {
         public override string Name => "ResoniteMP3";
         public override string Author => "__Choco__";
         public override string Version => "3.0.0"; //Version of the mod, should match the AssemblyVersion
-        public override string Link => "https://github.com/mpmxyz/ResoniteSampleMod";
+        public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
 
         //The following
