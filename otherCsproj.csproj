@@ -10,7 +10,7 @@
     <Product>ResoniteMP3</Product>
     <Description>Converts MP3 files to WAV on import</Description>
     <Copyright>MIT</Copyright>
-    <Version>3.0.0</Version>
+    <Version>1.0.0</Version>
     <PackageProjectUrl>$(PROJECT_URL)</PackageProjectUrl>
     <PackageReleaseNotes>$(RELEASE_NOTES)</PackageReleaseNotes>
     <PackageTags>Resonite</PackageTags>
@@ -106,11 +106,6 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <ItemGroup>
-    <InternalsVisibleTo Include="Test" />
-    <InternalsVisibleTo Include="TestRML" />
-    <InternalsVisibleTo Include="TestMonkey" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="obj\**\*AssemblyAttributes.cs" />
