@@ -114,6 +114,10 @@ namespace resoniteMPThree
                         files2.Add(newPath);
                         __state.Add(newPath);
                     }
+                    else
+                    {
+                        files2.Add(file);
+                    }
                 }
                 files = files2;
                 return true;
