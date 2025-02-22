@@ -38,7 +38,7 @@ namespace resoniteMPThree
             Config = GetConfiguration(); //Get this mods' current ModConfiguration
             Config.Save(true); //If you'd like to save the default config values to file
 
-            Harmony harmony = new Harmony("com.github.AwesomeTornado");
+            Harmony harmony = new Harmony("com.github.AwesomeTornado.ResoniteMP3");
 
             harmony.Patch(AccessTools.Method(typeof(AssetHelper), "ClassifyExtension"), postfix: AccessTools.Method(typeof(PatchMethods), "FixExtensionMapping"));
             harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
