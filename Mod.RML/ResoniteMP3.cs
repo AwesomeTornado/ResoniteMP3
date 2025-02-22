@@ -66,6 +66,12 @@ namespace resoniteMPThree
 
             public static string Mp3ToWav(string mp3File, string outputFile)
             {
+
+                if (File.Exists(outputFile))
+                {
+                    return outputFile;
+                }
+                /*
                 int retries = 20;
                 while (retries > 0 && File.Exists(outputFile))
                 {
@@ -79,7 +85,7 @@ namespace resoniteMPThree
                     Error("Failed to create output file.");
                     return outputFile;
                 }
-
+                */
                 using (var reader = new Mp3FileReader(mp3File))
                 {
                     WaveFileWriter.CreateWaveFile(outputFile, reader);
@@ -119,8 +125,9 @@ namespace resoniteMPThree
                 {
                     if (File.Exists(file))
                     {
-                        Msg("Deleting temp file: " + file);
-                        File.Delete(file);
+                        //Msg("Deleting temp file: " + file);
+                        //File.Delete(file);
+                        //deleting the file seemed to cause issues... hope its fine if I just leave the file there.
                     }
                 }
             }
