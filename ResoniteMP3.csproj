@@ -6,7 +6,7 @@
     <StartArguments>-Screen -LoadAssembly Libraries/ResoniteModLoader.dll</StartArguments>
     <VariantSuffix>ResoniteModLoader</VariantSuffix>
   </PropertyGroup>
-  <Import Project="./SampleMod.csproj" />
+  <Import Project="./otherCsproj.csproj" />
   <PropertyGroup>
     <PostBuildEvent Condition="$([MSBuild]::IsOSPlatform('Windows'))">
       copy /Y "$(AssemblyName).dll" "$(ResonitePath)\rml_mods\$(AssemblyName).dll"
