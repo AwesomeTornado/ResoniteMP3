@@ -22,25 +22,12 @@ namespace resoniteMPThree
         public override string Version => "1.1.0"; //Version of the mod, should match the AssemblyVersion
         public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
-
-        //The following
-        [AutoRegisterConfigKey]
-        private static readonly ModConfigurationKey<bool> enabled = new ModConfigurationKey<bool>("enabled", "Should the mod be enabled", () => true); //Optional config settings
-
-        private static ModConfiguration Config;//If you use config settings, this will be where you interface with them
-
-        public bool Enabled => Config.GetValue(enabled);
-
         public override void OnEngineInit()
         {
-            Config = GetConfiguration(); //Get this mods' current ModConfiguration
-            Config.Save(true); //If you'd like to save the default config values to file
-
             Harmony harmony = new Harmony("com.__Choco__.ResoniteMP3");
 
             harmony.Patch(AccessTools.Method(typeof(AssetHelper), "ClassifyExtension"), postfix: AccessTools.Method(typeof(PatchMethods), "FixExtensionMapping"));
             harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
-            //harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), postfix: AccessTools.Method(typeof(PatchMethods), "DeleteTempFiles"));
             harmony.PatchAll();
 
             string tempDirectory = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar;
