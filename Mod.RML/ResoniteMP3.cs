@@ -14,6 +14,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using static FrooxEngine.CubemapCreator;
 using static FrooxEngine.Projection360Material;
+using System.Runtime.CompilerServices;
+using System;
 
 namespace resoniteMPThree
 {
@@ -21,7 +23,7 @@ namespace resoniteMPThree
     {
         public override string Name => "ResoniteMP3";
         public override string Author => "__Choco__";
-        public override string Version => "1.0.0"; //Version of the mod, should match the AssemblyVersion
+        public override string Version => "1.1.0"; //Version of the mod, should match the AssemblyVersion
         public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
 
@@ -42,7 +44,7 @@ namespace resoniteMPThree
 
             harmony.Patch(AccessTools.Method(typeof(AssetHelper), "ClassifyExtension"), postfix: AccessTools.Method(typeof(PatchMethods), "FixExtensionMapping"));
             harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
-            harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "DeleteTempFiles"));
+            harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), postfix: AccessTools.Method(typeof(PatchMethods), "DeleteTempFiles"));
             harmony.PatchAll();
 
             Msg("ResoniteMP3 loaded.");
@@ -64,34 +66,23 @@ namespace resoniteMPThree
                 }
             }
 
-            public static string Mp3ToWav(string mp3File, string outputFile)
+            public static string Mp3ToWav(string mp3File)
             {
-
-                if (File.Exists(outputFile))
+                string fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".wav";
+                if (File.Exists(fileName))
                 {
-                    return outputFile;
-                }
-                /*
-                int retries = 20;
-                while (retries > 0 && File.Exists(outputFile))
-                {
-                    Warn("Output file already exists, trying another name.");
-                    outputFile = (10 - retries) + outputFile;
-                    retries--;
+                    Error("This error message is incredibly unlikely.");
+                    Error("You have somehow generated a temp file that conflicts with another pre existing temp file.");
+                    Error("Exiting ResoniteMP3 patch function...");
+                    return mp3File;
                 }
                 
-                if (File.Exists(outputFile))
-                {
-                    Error("Failed to create output file.");
-                    return outputFile;
-                }
-                */
                 using (var reader = new Mp3FileReader(mp3File))
                 {
-                    WaveFileWriter.CreateWaveFile(outputFile, reader);
+                    WaveFileWriter.CreateWaveFile(fileName, reader);
                 }
 
-                return outputFile;
+                return fileName;
             }
 
             private static bool ConvertMP3BeforeLoad(out List<string> __state, AssetClass assetClass, ref IEnumerable<string> files, World world, float3 position, floatQ rotation, float3 scale, bool silent = false)
@@ -109,7 +100,7 @@ namespace resoniteMPThree
                 {
                     if (Path.GetExtension(file) == ".mp3")
                     {
-                        string newPath = Mp3ToWav(file, file + ".wav");
+                        string newPath = Mp3ToWav(file);
                         Msg("Creating temp file: " + newPath);
                         files2.Add(newPath);
                         __state.Add(newPath);
@@ -129,9 +120,8 @@ namespace resoniteMPThree
                 {
                     if (File.Exists(file))
                     {
-                        //Msg("Deleting temp file: " + file);
-                        //File.Delete(file);
-                        //deleting the file seemed to cause issues... hope its fine if I just leave the file there.
+                        Msg("Deleting temp file: " + file);
+                        File.Delete(file);
                     }
                 }
             }
