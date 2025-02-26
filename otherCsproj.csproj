@@ -3,14 +3,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <VariantSuffix Condition="'$(VariantSuffix)' == ''">Common</VariantSuffix>
-    <AssemblyName>__Choco__.ResoniteMP3</AssemblyName>
+    <AssemblyName>ResoniteMP3</AssemblyName>
     <Authors>__Choco__</Authors>
     <TargetFramework>net472</TargetFramework>
     <AssemblyTitle>ResoniteMP3</AssemblyTitle>
     <Product>ResoniteMP3</Product>
     <Description>Converts MP3 files to WAV on import</Description>
     <Copyright>MIT</Copyright>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <PackageProjectUrl>$(PROJECT_URL)</PackageProjectUrl>
     <PackageReleaseNotes>$(RELEASE_NOTES)</PackageReleaseNotes>
     <PackageTags>Resonite</PackageTags>
