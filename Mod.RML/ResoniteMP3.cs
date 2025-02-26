@@ -2,11 +2,7 @@
 using Elements.Core;
 using FrooxEngine;
 using HarmonyLib;
-using MPOHeaderReader;
-using NAudio.FileFormats.Mp3;
-using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using NAudio;
 using ResoniteModLoader;
 using System.Collections.Generic;
 using System.IO;
@@ -44,8 +40,22 @@ namespace resoniteMPThree
 
             harmony.Patch(AccessTools.Method(typeof(AssetHelper), "ClassifyExtension"), postfix: AccessTools.Method(typeof(PatchMethods), "FixExtensionMapping"));
             harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
-            harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), postfix: AccessTools.Method(typeof(PatchMethods), "DeleteTempFiles"));
+            //harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), postfix: AccessTools.Method(typeof(PatchMethods), "DeleteTempFiles"));
             harmony.PatchAll();
+
+            string tempDirectory = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar;
+            if (Directory.Exists(tempDirectory))
+            {
+                var files = Directory.EnumerateFiles(tempDirectory);
+                foreach (string file in files) {
+                    if (File.Exists(file))
+                    {
+                        Msg("Deleting temp file: " + file);
+                        File.Delete(file);
+                    }
+                }
+            }
+            Directory.CreateDirectory(tempDirectory);
 
             Msg("ResoniteMP3 loaded.");
         }
@@ -68,7 +78,7 @@ namespace resoniteMPThree
 
             public static string Mp3ToWav(string mp3File)
             {
-                string fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".wav";
+                string fileName = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + ".wav";
                 if (File.Exists(fileName))
                 {
                     Error("This error message is incredibly unlikely.");
@@ -85,10 +95,8 @@ namespace resoniteMPThree
                 return fileName;
             }
 
-            private static bool ConvertMP3BeforeLoad(out List<string> __state, AssetClass assetClass, ref IEnumerable<string> files, World world, float3 position, floatQ rotation, float3 scale, bool silent = false)
+            private static bool ConvertMP3BeforeLoad(AssetClass assetClass, ref IEnumerable<string> files, World world, float3 position, floatQ rotation, float3 scale, bool silent = false)
             {
-                __state = new List<string>();
-
                 if (assetClass != AssetClass.Audio)
                 {
                     return true;
@@ -103,7 +111,6 @@ namespace resoniteMPThree
                         string newPath = Mp3ToWav(file);
                         Msg("Creating temp file: " + newPath);
                         files2.Add(newPath);
-                        __state.Add(newPath);
                     }
                     else
                     {
@@ -112,18 +119,6 @@ namespace resoniteMPThree
                 }
                 files = files2;
                 return true;
-            }
-
-            private static void DeleteTempFiles(List<string> __state)
-            {
-                foreach (string file in __state)
-                {
-                    if (File.Exists(file))
-                    {
-                        Msg("Deleting temp file: " + file);
-                        File.Delete(file);
-                    }
-                }
             }
         }
     }
