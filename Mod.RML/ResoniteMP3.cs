@@ -12,6 +12,7 @@ using static FrooxEngine.CubemapCreator;
 using static FrooxEngine.Projection360Material;
 using System.Runtime.CompilerServices;
 using System;
+using System.Runtime.Remoting.Messaging;
 
 namespace resoniteMPThree
 {
@@ -43,6 +44,8 @@ namespace resoniteMPThree
                 }
             }
             Directory.CreateDirectory(tempDirectory);
+
+            Engine.Current.OnShutdown += MethodToCall;
 
             Msg("ResoniteMP3 loaded.");
         }
