@@ -20,7 +20,7 @@ namespace resoniteMPThree
     {
         public override string Name => "ResoniteMP3";
         public override string Author => "__Choco__";
-        public override string Version => "1.1.0"; //Version of the mod, should match the AssemblyVersion
+        public override string Version => "2.0.0"; //Version of the mod, should match the AssemblyVersion
         public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
         public override void OnEngineInit()
@@ -31,11 +31,21 @@ namespace resoniteMPThree
             harmony.Patch(AccessTools.Method(typeof(UniversalImporter), "ImportTask"), prefix: AccessTools.Method(typeof(PatchMethods), "ConvertMP3BeforeLoad"));
             harmony.PatchAll();
 
+            clearTempFiles();
+            string tempDirectory = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar;
+            Directory.CreateDirectory(tempDirectory);
+
+            Msg("ResoniteMP3 loaded.");
+        }
+
+        private void clearTempFiles()
+        {
             string tempDirectory = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar;
             if (Directory.Exists(tempDirectory))
             {
                 var files = Directory.EnumerateFiles(tempDirectory);
-                foreach (string file in files) {
+                foreach (string file in files)
+                {
                     if (File.Exists(file))
                     {
                         Msg("Deleting temp file: " + file);
@@ -43,11 +53,6 @@ namespace resoniteMPThree
                     }
                 }
             }
-            Directory.CreateDirectory(tempDirectory);
-
-            Engine.Current.OnShutdown += MethodToCall;
-
-            Msg("ResoniteMP3 loaded.");
         }
 
         public class PatchMethods
@@ -59,7 +64,7 @@ namespace resoniteMPThree
                 {
                     return;
                 }
-                if (ext == "mp3")
+                if (ext == ".mp3")
                 {
                     Msg("remapped mp3 from video to audio.");
                     __result = AssetClass.Audio;
