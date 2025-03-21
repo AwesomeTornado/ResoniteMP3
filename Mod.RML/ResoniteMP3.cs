@@ -20,7 +20,7 @@ namespace resoniteMPThree
     {
         public override string Name => "ResoniteMP3";
         public override string Author => "__Choco__";
-        public override string Version => "2.0.0"; //Version of the mod, should match the AssemblyVersion
+        public override string Version => "2.1.0"; //Version of the mod, should match the AssemblyVersion
         public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
         public override void OnEngineInit()
@@ -43,13 +43,13 @@ namespace resoniteMPThree
             string tempDirectory = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar;
             if (Directory.Exists(tempDirectory))
             {
-                var files = Directory.EnumerateFiles(tempDirectory);
-                foreach (string file in files)
+                var directories = Directory.EnumerateDirectories(tempDirectory);
+                foreach (string directory in directories)
                 {
-                    if (File.Exists(file))
+                    if (Directory.Exists(directory))
                     {
-                        Msg("Deleting temp file: " + file);
-                        File.Delete(file);
+                        Msg("Deleting temp directory: " + directory);
+                        Directory.Delete(directory, true);
                     }
                 }
             }
@@ -73,11 +73,11 @@ namespace resoniteMPThree
 
             public static string Mp3ToWav(string mp3File)
             {
-                string fileName = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + ".wav";
+                string fileName = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(mp3File) + ".wav";
                 if (File.Exists(fileName))
                 {
-                    Error("This error message is incredibly unlikely.");
-                    Error("You have somehow generated a temp file that conflicts with another pre existing temp file.");
+                    Error("This error message is astronomically unlikely, but still technically possible.");
+                    Error("You have somehow generated a temp folder that conflicts with another pre existing temp folder.");
                     Error("Exiting ResoniteMP3 patch function...");
                     return mp3File;
                 }
@@ -104,7 +104,7 @@ namespace resoniteMPThree
                     if (Path.GetExtension(file) == ".mp3")
                     {
                         string newPath = Mp3ToWav(file);
-                        Msg("Creating temp file: " + newPath);
+                        Msg("Creating temp folder and file: " + newPath);
                         files2.Add(newPath);
                     }
                     else
