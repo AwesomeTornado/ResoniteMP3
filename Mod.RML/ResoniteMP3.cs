@@ -73,7 +73,11 @@ namespace resoniteMPThree
 
             public static string Mp3ToWav(string mp3File)
             {
-                string fileName = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(mp3File) + ".wav";
+                string fileName = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + Path.DirectorySeparatorChar;
+                Msg("Creating temp folder: " + fileName);
+                Directory.CreateDirectory(fileName);
+                fileName += Path.GetFileNameWithoutExtension(mp3File) + ".wav";
+                Msg("Creating temp file: " + fileName);
                 if (File.Exists(fileName))
                 {
                     Error("This error message is astronomically unlikely, but still technically possible.");
@@ -103,6 +107,7 @@ namespace resoniteMPThree
                 {
                     if (Path.GetExtension(file) == ".mp3")
                     {
+                        Msg("Discovered mp3 file in import");
                         string newPath = Mp3ToWav(file);
                         Msg("Creating temp folder and file: " + newPath);
                         files2.Add(newPath);
