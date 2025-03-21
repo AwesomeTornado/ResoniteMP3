@@ -10,7 +10,7 @@
     <Product>ResoniteMP3</Product>
     <Description>Converts MP3 files to WAV on import</Description>
     <Copyright>MIT</Copyright>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <PackageProjectUrl>$(PROJECT_URL)</PackageProjectUrl>
     <PackageReleaseNotes>$(RELEASE_NOTES)</PackageReleaseNotes>
     <PackageTags>Resonite</PackageTags>
