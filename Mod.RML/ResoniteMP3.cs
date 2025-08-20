@@ -2,11 +2,11 @@
 using Elements.Core;
 using FrooxEngine;
 using HarmonyLib;
-//using NAudio.Wave;
 using ResoniteModLoader;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using FFMpegCore;
 
 
 namespace resoniteMPThree
@@ -71,7 +71,7 @@ namespace resoniteMPThree
                 string fileName = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + Path.DirectorySeparatorChar;
                 Msg("Creating temp folder: " + fileName);
                 Directory.CreateDirectory(fileName);
-                fileName += Path.GetFileNameWithoutExtension(mp3File) + ".wav";
+                fileName += Path.GetFileNameWithoutExtension(mp3File) + ".ogg";
                 Msg("Creating temp file: " + fileName);
                 if (File.Exists(fileName))
                 {
@@ -80,12 +80,12 @@ namespace resoniteMPThree
                     Error("Exiting ResoniteMP3 patch function...");
                     return mp3File;
                 }
-                
-               /* using (var reader = new Mp3FileReader(mp3File))
-                {
-                    WaveFileWriter.CreateWaveFile(fileName, reader);
-                }*/
-            
+
+                FFMpegArguments
+                    .FromFileInput(mp3File)
+                    .OutputToFile(fileName)
+                    .ProcessSynchronously();
+
                 return fileName;
             }
 
@@ -95,9 +95,9 @@ namespace resoniteMPThree
                 {
                     return true;
                 }
-                
+
                 List<string> files2 = new List<string>();
-                
+
                 foreach (string file in files)
                 {
                     if (Path.GetExtension(file) == ".mp3")
