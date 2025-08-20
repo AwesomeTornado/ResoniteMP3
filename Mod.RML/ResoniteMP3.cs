@@ -6,13 +6,8 @@ using NAudio.Wave;
 using ResoniteModLoader;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using static FrooxEngine.CubemapCreator;
-using static FrooxEngine.Projection360Material;
-using System.Runtime.CompilerServices;
 using System;
-using System.Runtime.Remoting.Messaging;
+
 
 namespace resoniteMPThree
 {
@@ -20,7 +15,7 @@ namespace resoniteMPThree
     {
         public override string Name => "ResoniteMP3";
         public override string Author => "__Choco__";
-        public override string Version => "2.1.0"; //Version of the mod, should match the AssemblyVersion
+        public override string Version => "3.0.0"; //Version of the mod, should match the AssemblyVersion
         public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
         public override void OnEngineInit()
