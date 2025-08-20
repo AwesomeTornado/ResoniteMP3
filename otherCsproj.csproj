@@ -8,7 +8,7 @@
     <TargetFramework>net9</TargetFramework>
     <AssemblyTitle>ResoniteMP3</AssemblyTitle>
     <Product>ResoniteMP3</Product>
-    <Description>Converts MP3 files to WAV on import</Description>
+    <Description>Converts MP3 files to OGG on import</Description>
     <Copyright>MIT</Copyright>
     <Version>3.0.0</Version>
     <PackageProjectUrl>$(PROJECT_URL)</PackageProjectUrl>

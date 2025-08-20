@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using FFMpegCore;
+using Instances;
+using FFMpegCore.Enums;
 
 
 namespace resoniteMPThree
@@ -83,7 +85,7 @@ namespace resoniteMPThree
 
                 FFMpegArguments
                     .FromFileInput(mp3File)
-                    .OutputToFile(fileName)
+                    .OutputToFile(fileName, true, options => options.WithArgument(new FFMpegCore.Arguments.CustomArgument(@"-vn")))
                     .ProcessSynchronously();
 
                 return fileName;
