@@ -68,7 +68,7 @@ namespace resoniteMPThree
                 }
             }
 
-            public static string Mp3ToWav(string mp3File)
+            public static string Mp3ToOGG(string mp3File)
             {
                 string fileName = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar + Guid.NewGuid().ToString() + Path.DirectorySeparatorChar;
                 Msg("Creating temp folder: " + fileName);
@@ -105,7 +105,7 @@ namespace resoniteMPThree
                     if (Path.GetExtension(file) == ".mp3")
                     {
                         Msg("Discovered mp3 file in import");
-                        string newPath = Mp3ToWav(file);
+                        string newPath = Mp3ToOGG(file);
                         Msg("Creating temp folder and file: " + newPath);
                         files2.Add(newPath);
                     }
