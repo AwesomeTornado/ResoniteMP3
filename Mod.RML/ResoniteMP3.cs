@@ -2,7 +2,7 @@
 using Elements.Core;
 using FrooxEngine;
 using HarmonyLib;
-using NAudio.Wave;
+//using NAudio.Wave;
 using ResoniteModLoader;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +33,7 @@ namespace resoniteMPThree
             Msg("ResoniteMP3 loaded.");
         }
 
-        private void clearTempFiles()
+        private static void clearTempFiles()
         {
             string tempDirectory = Path.GetTempPath() + "ResoniteMP3" + Path.DirectorySeparatorChar;
             if (Directory.Exists(tempDirectory))
@@ -50,7 +50,7 @@ namespace resoniteMPThree
             }
         }
 
-        public class PatchMethods
+        private static class PatchMethods
         {
 
             public static void FixExtensionMapping(ref AssetClass __result, string ext)
@@ -81,11 +81,11 @@ namespace resoniteMPThree
                     return mp3File;
                 }
                 
-                using (var reader = new Mp3FileReader(mp3File))
+               /* using (var reader = new Mp3FileReader(mp3File))
                 {
                     WaveFileWriter.CreateWaveFile(fileName, reader);
-                }
-
+                }*/
+            
                 return fileName;
             }
 

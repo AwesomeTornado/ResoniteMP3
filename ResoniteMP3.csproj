@@ -11,9 +11,6 @@
     <PostBuildEvent Condition="$([MSBuild]::IsOSPlatform('Windows'))">
       copy /Y "$(AssemblyName).dll" "$(ResonitePath)\rml_mods\$(AssemblyName).dll"
 	</PostBuildEvent>
-    <PostBuildEvent Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-      cp -f "$(AssemblyName).dll" "$(ResonitePath)/rml_mods/$(AssemblyName).dll"
-	</PostBuildEvent>
     <AssemblyName>ResoniteMPThree</AssemblyName>
     <Authors>__Choco__</Authors>
     <Product />
@@ -35,11 +32,6 @@
 	  <Reference Include="Elements.Core">
 		  <HintPath>$(ResonitePath)\Elements.Core.dll</HintPath>
 	  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Mod.RML/**/*.cs" />
-    <Compile Include="Patches.Harmony/**/*.cs" />
-    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.2.1" />
