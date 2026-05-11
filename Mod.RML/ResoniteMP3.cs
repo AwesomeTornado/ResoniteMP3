@@ -1,14 +1,13 @@
 ﻿using Elements.Assets;
 using Elements.Core;
+using FFMpegCore;
 using FrooxEngine;
 using HarmonyLib;
 using ResoniteModLoader;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System;
-using FFMpegCore;
-using Instances;
-using FFMpegCore.Enums;
+using System.Runtime.InteropServices;
 
 
 namespace resoniteMPThree
@@ -17,11 +16,16 @@ namespace resoniteMPThree
     {
         public override string Name => "ResoniteMP3";
         public override string Author => "__Choco__";
-        public override string Version => "3.0.0"; //Version of the mod, should match the AssemblyVersion
+        public override string Version => "3.0.1"; //Version of the mod, should match the AssemblyVersion
         public override string Link => "https://github.com/AwesomeTornado/ResoniteMP3";
 
         public override void OnEngineInit()
         {
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                GlobalFFOptions.Configure(new FFOptions { BinaryFolder = "/usr/bin", TemporaryFilesFolder = "/tmp" });
+
+
             Harmony harmony = new Harmony("com.__Choco__.ResoniteMP3");
 
             harmony.Patch(AccessTools.Method(typeof(AssetHelper), "ClassifyExtension"), postfix: AccessTools.Method(typeof(PatchMethods), "FixExtensionMapping"));
